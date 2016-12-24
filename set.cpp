@@ -5,14 +5,16 @@ using namespace std;
 
 enum Color {red, green, purple};
 enum Shape {oval, diamond, squiggle};
+enum Shade {blank, dashed, filled};
 
 class Card {
 public:
-	Card(Color c, int num, Shape s) : color(c), number(num), shape(s) {}
+	Card(Color c, int num, Shape sp, Shade sd) : color(c), number(num), shape(sp), shade(sd) {}
 
 	Color color;
 	int number;
 	Shape shape;
+	Shade shade;
 };
 
 vector<Card> group3(vector<Card> cards, int a, int b, int c){
