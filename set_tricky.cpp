@@ -2,13 +2,21 @@
 #include <vector>
 #include <cassert>
 #include <string>
+#include <cstdlib>
 using namespace std;
 
 enum attribute {color, number, shape, shade};
 
 //card is represented by string "wxyz"
 
-vector<string> group3(vector<string> cards, int a, int b, int c){
+/* 
+	color w: (r, red), (p, purple), (g, green)
+	number x: 1, 2, 3
+	shape y: (o, oval), (d, diamond), (s, squiggle)
+	shade z: (b, blank), (d, dashed), (f, filled)
+*/
+
+/*vector<string> group3(vector<string> cards, int a, int b, int c){
 	vector<string> ret;
 	ret.clear();
 
@@ -17,20 +25,108 @@ vector<string> group3(vector<string> cards, int a, int b, int c){
 	ret.push_back(cards[c]);
 
 	return ret;
+}*/
+
+bool same(string cardA, string cardB, string cardC, int att){
+	return ((cardA[att] == cardB[att]) and (cardB[att] == cardC[att]));
 }
 
-bool same(vector<string> cards, attribute att){
-	assert(cards.size() == 3);
-	return ((cards[0][att] == cards[1][att]) and (cards[1][att] == cards[2][att]));
+bool diff(string cardA, string cardB, string cardC, int att){
+	return ((cardA[att] != cardB[att]) and
+			(cardB[att] != cardC[att]) and 
+			(cardA[att] != cardC[att]));
 }
 
-bool diff(vector<string> cards, attribute att){
-	assert(cards.size() == 3);
-	return ((cards[0][att] != cards[1][att]) and
-			(cards[1][att] != cards[2][att]) and 
-			(cards[0][att] != cards[2][att]));
+string genrand(){
+	//===================Look up rand() syntax===================//
+	return "\0";
+}
+
+bool checkcorrect(string card){
+	if((card[0] != 'r') and (card[0] != 'p') and (card[0] != 'g')){
+		cout << "0" << '\n';
+		return false;
+	}
+
+	if(((card[1] - '0') > 3) or ((card[1] - '0') < 1)){
+		cout << (card[1] - '0') << '\n';
+		cout << "1" << '\n';
+		return false;
+	}
+
+	if((card[2] != 'o') and (card[2] != 'd') and (card[2] != 's')){
+		cout << "2" << '\n';
+		return false;
+	}
+
+	if((card[3] != 'b') and (card[3] != 'd') and (card[3] != 'f')){
+		cout << "3" << '\n';
+		return false;
+	}
+
+	return true;
+}
+
+string takeinput(){
+	string newcard;
+
+	while (true){
+		cin >> newcard;
+		if(newcard.length() != 4){
+			cout << "string must be length 4\n";
+			continue;
+		}
+
+		if(checkcorrect(newcard)){
+			break;
+		} else {
+			cout << "check your input\n";
+		}
+	}
+
+	return newcard;
+}
+
+bool isset(string cardA, string cardB, string cardC){
+	int matchcounter = 0;
+
+	for (int i = 0; i < 4; ++i){
+		if(same(cardA, cardB, cardC, i) or diff(cardA, cardB, cardC, i)){
+			matchcounter++;
+		}
+	}
+
+	return (matchcounter == 4);
 }
 
 int main(){
+	int numcards;
+	vector<string> cards;
+
+	cout << "Find sets in how many cards? ";
+	cin >> numcards;
+	cards.reserve(numcards);
+
+	cout << "Enter a string with length 4.\n" << 
+		"color w: (r, red), (p, purple), (g, green)\n" << 
+		"number x: 1, 2, 3\n" << 
+		"shape y: (o, oval), (d, diamond), (s, squiggle)\n" << 
+		"shade z: (b, blank), (d, dashed), (f, filled)\n";
+
+
+	for(int i = 0; i < numcards; ++i){
+		cards[i] = takeinput();
+	}
+
+	for (int i = 0; i < numcards; ++i){
+		for (int j = i + 1; j < numcards; ++j){
+			for (int k = j + 1; k < numcards; ++k){
+				if (isset(cards[i], cards[j], cards[k])){
+					cout << cards[i] << " " << cards[j] << " " << cards[k] << '\n';
+				}
+			}
+		}
+	}
+
 	return 0;
 }
